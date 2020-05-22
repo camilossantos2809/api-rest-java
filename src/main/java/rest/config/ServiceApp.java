@@ -13,7 +13,7 @@ public class ServiceApp {
         jettyServer.setHandler(context);
         ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
         jerseyServlet.setInitOrder(0);
-//        jerseyServlet.setInitParameter("jersey.config.server.provider.packages","rest.resource");
+        jerseyServlet.setInitParameter("jersey.config.server.provider.packages","rest.resource");
         try {
             jettyServer.start();
             jettyServer.join();
