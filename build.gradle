@@ -1,6 +1,9 @@
 plugins {
     id 'java'
+    id 'application'
 }
+
+mainClassName = 'rest.config.ServiceApp'
 
 group 'br.pucpr'
 version '1.0-SNAPSHOT'
