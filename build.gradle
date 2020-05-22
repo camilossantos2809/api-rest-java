@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group 'br.pucpr'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jerseyVersion = '2.27'
+    jaxbVersion = '2.3.0'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.0.M0'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.28.v20200408'
+    compile "org.glassfish.jersey.core:jersey-server:${jerseyVersion}"
+    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${jerseyVersion}"
+    compile "org.glassfish.jersey.containers:jersey-container-jetty-http:${jerseyVersion}"
+    compile "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}"
+    compile "org.glassfish.jersey.inject:jersey-hk2:${jerseyVersion}"
+    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+    compile "javax.xml.bind:jaxb-api:${jaxbVersion}"
+    compile "com.sun.xml.bind:jaxb-core:${jaxbVersion}"
+    compile "com.sun.xml.bind:jaxb-impl:${jaxbVersion}"
+}
