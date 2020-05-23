@@ -1,0 +1,28 @@
+### Send POST request with json body
+POST http://localhost:8080/disciplina
+Content-Type: application/json
+
+{
+  "codigo": 1,
+  "nome": "teste1"
+}
+
+### Lista disciplinas
+GET http://localhost:8080/disciplina
+Content-Type: application/json
+
+### Atualiza disciplina
+PUT http://localhost:8080/disciplina/1
+Content-Type: application/json
+
+{
+  "nome": "teste1 atualizado"
+}
+
+### Consulta disciplina por codigo
+GET http://localhost:8080/disciplina/1
+Content-Type: application/json
+
+### Remove disciplina
+DELETE http://localhost:8080/disciplina/1
+Content-Type: application/json
