@@ -1,35 +1,25 @@
 package rest.model;
 
-public class Nota {
+public class NotaBody {
     private static final long serialVersionUID = 1L;
-    private Disciplina disciplina;
-    private Estudante estudante;
+    private int disciplina;
+    private int estudante;
     private double nota;
     private double frequencia;
 
-    public Nota() {
-    }
-
-    public Nota( Estudante estudante,Disciplina disciplina, double nota, double frequencia) {
-        this.disciplina = disciplina;
-        this.estudante = estudante;
-        this.nota = nota;
-        this.frequencia = frequencia;
-    }
-
-    public Disciplina getDisciplina() {
+    public int getDisciplina() {
         return disciplina;
     }
 
-    public void setDisciplina(Disciplina disciplina) {
+    public void setDisciplina(int disciplina) {
         this.disciplina = disciplina;
     }
 
-    public Estudante getEstudante() {
+    public int getEstudante() {
         return estudante;
     }
 
-    public void setEstudante(Estudante estudante) {
+    public void setEstudante(int estudante) {
         this.estudante = estudante;
     }
 

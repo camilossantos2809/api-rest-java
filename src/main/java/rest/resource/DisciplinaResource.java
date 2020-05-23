@@ -17,18 +17,18 @@ public class DisciplinaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response disciplinas() {
+    public Response list() {
         return Response.ok().entity(this.dao.list()).build();
     }
 
     @GET
     @Path("{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response disciplina(@PathParam("codigo") int codigo) {
+    public Response get(@PathParam("codigo") int codigo) {
         Map<String, Integer> pk = new HashMap<>();
         pk.put("codigo", codigo);
         Disciplina obj = this.dao.read(pk);
-        if (obj.getCodigo() == 0){
+        if (obj.getCodigo() == 0) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
         return Response.ok().entity(this.dao.read(pk)).build();
@@ -47,5 +47,35 @@ public class DisciplinaResource {
         }
     }
 
+    @PUT
+    @Path("{codigo}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(Disciplina dados, @PathParam("codigo") int codigo) {
+        Map<String, Integer> pk = new HashMap<>();
+        pk.put("codigo", codigo);
+        try {
+            this.dao.update(pk, dados);
+            return Response.ok().entity(true).build();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
 
+    @DELETE
+    @Path("{codigo}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delete(@PathParam("codigo") int codigo) {
+        Map<String, Integer> pk = new HashMap<>();
+        pk.put("codigo", codigo);
+        try {
+            this.dao.delete(pk);
+            return Response.ok().entity(true).build();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
 }

@@ -1,17 +1,42 @@
 package rest.model.dao;
 
+import rest.model.Disciplina;
+import rest.model.Estudante;
 import rest.model.Nota;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class NotaDao implements IDao<Nota> {
     private Connection conn;
+    private final EstudanteDao estudanteDao = new EstudanteDao(Dao.getConnection());
+    private final DisciplinaDao disciplinaDao = new DisciplinaDao(Dao.getConnection());
+    private final Map<Integer, Estudante> estudantes = new HashMap<>();
+    private final Map<Integer, Disciplina> disciplinas = new HashMap<>();
 
     public NotaDao(Connection conn) {
         this.conn = conn;
+    }
+
+    private Estudante getEstudante(int codigo) throws SQLException{
+        if (this.estudantes.containsKey(codigo)){
+            return this.estudantes.get(codigo);
+        }
+        Estudante estudante = this.estudanteDao.read(codigo);
+        this.estudantes.put(codigo, estudante);
+        return estudante;
+    }
+
+    private Disciplina getDisciplina(int codigo) throws SQLException{
+        if (this.disciplinas.containsKey(codigo)){
+            return this.disciplinas.get(codigo);
+        }
+        Disciplina disciplina = this.disciplinaDao.read(codigo);
+        this.disciplinas.put(codigo, disciplina);
+        return disciplina;
     }
 
     @Override
@@ -23,7 +48,10 @@ public class NotaDao implements IDao<Nota> {
             List<Nota> list = new ArrayList<>();
             while (res.next()) {
                 Nota obj = new Nota();
-
+                obj.setEstudante(this.getEstudante(res.getInt("estudante_cod")));
+                obj.setDisciplina(this.getDisciplina(res.getInt("disciplina_cod")));
+                obj.setNota(res.getDouble("nota"));
+                obj.setFrequencia(res.getDouble("frequencia"));
                 list.add(obj);
             }
             return list;
@@ -33,12 +61,14 @@ public class NotaDao implements IDao<Nota> {
         }
     }
 
+
     @Override
     public void create(Nota dados) throws SQLException {
         String sql = "INSERT INTO nota(estudante_cod, disciplina_cod, nota, frequencia) " +
                 "VALUES(?,?,?,?)";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
+
             pstmt.setInt(1, dados.getEstudante().getCodigo());
             pstmt.setInt(2, dados.getDisciplina().getCodigo());
             pstmt.setDouble(3, dados.getNota());
@@ -61,7 +91,9 @@ public class NotaDao implements IDao<Nota> {
             ResultSet res = pstmt.executeQuery();
 
             Nota obj = new Nota();
-            while (res.next() && res.isFirst()) {
+            while (res.next()) {
+                obj.setEstudante(this.getEstudante(res.getInt("estudante_cod")));
+                obj.setDisciplina(this.getDisciplina(res.getInt("disciplina_cod")));
                 obj.setNota(res.getDouble("nota"));
                 obj.setFrequencia(res.getDouble("frequencia"));
             }
@@ -74,7 +106,7 @@ public class NotaDao implements IDao<Nota> {
 
     @Override
     public void update(Map<String, Integer> pk, Nota dadosNovos) throws SQLException {
-        String sql = "UPDATE disciplina " +
+        String sql = "UPDATE nota " +
                 "SET estudante_cod=?, disciplina_cod=?, nota=?, frequencia=? " +
                 "where estudante_cod=? AND disciplina_cod=?";
         try {

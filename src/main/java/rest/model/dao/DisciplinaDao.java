@@ -4,6 +4,7 @@ import rest.model.Disciplina;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,12 @@ public class DisciplinaDao implements IDao<Disciplina> {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public Disciplina read(int codigo) throws SQLException {
+        Map<String, Integer> pk = new HashMap<>();
+        pk.put("codigo", codigo);
+        return this.read(pk);
     }
 
     @Override

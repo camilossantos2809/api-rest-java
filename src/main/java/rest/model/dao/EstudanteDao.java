@@ -4,6 +4,7 @@ import rest.model.Estudante;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,12 @@ public class EstudanteDao implements IDao<Estudante> {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public Estudante read(int codigo) throws SQLException {
+        Map<String, Integer> pk = new HashMap<>();
+        pk.put("codigo", codigo);
+        return this.read(pk);
     }
 
     @Override
