@@ -1,30 +1,31 @@
 package rest.model.dao;
 
-import rest.model.Disciplina;
+import rest.model.Estudante;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DisciplinaDao implements IDao<Disciplina> {
+public class EstudanteDao implements IDao<Estudante> {
     private Connection conn;
 
-    public DisciplinaDao(Connection conn) {
+    public EstudanteDao(Connection conn) {
         this.conn = conn;
     }
 
     @Override
-    public List<Disciplina> list() {
+    public List<Estudante> list() {
         try {
             Statement stmt = this.conn.createStatement();
-            ResultSet res = stmt.executeQuery("select * from disciplina");
+            ResultSet res = stmt.executeQuery("select * from estudante");
 
-            List<Disciplina> list = new ArrayList<>();
+            List<Estudante> list = new ArrayList<>();
             while (res.next()) {
-                Disciplina obj = new Disciplina();
+                Estudante obj = new Estudante();
                 obj.setNome(res.getString("nome"));
                 obj.setCodigo(res.getInt("codigo"));
+                obj.setEmail(res.getString("email"));
                 list.add(obj);
             }
             return list;
@@ -35,12 +36,13 @@ public class DisciplinaDao implements IDao<Disciplina> {
     }
 
     @Override
-    public void create(Disciplina dados) throws SQLException {
-        String sql = "INSERT INTO disciplina(codigo, nome) VALUES(?,?)";
+    public void create(Estudante dados) throws SQLException {
+        String sql = "INSERT INTO estudante(codigo, nome, email) VALUES(?,?, ?)";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
             pstmt.setInt(1, dados.getCodigo());
             pstmt.setString(2, dados.getNome());
+            pstmt.setString(3,dados.getEmail());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -49,18 +51,19 @@ public class DisciplinaDao implements IDao<Disciplina> {
     }
 
     @Override
-    public Disciplina read(Map<String, Integer> pk) {
-        String sql = "select * from disciplina where codigo=?";
+    public Estudante read(Map<String, Integer> pk) {
+        String sql = "select * from estudante where codigo=?";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
-            pstmt.setInt(1, pk.get("codigo"));
+            pstmt.setInt(1,pk.get("codigo"));
 
             ResultSet res = pstmt.executeQuery();
 
-            Disciplina obj = new Disciplina();
-            while (res.next() && res.isFirst()) {
+            Estudante obj = new Estudante();
+            while (res.next() && res.isFirst()){
                 obj.setNome(res.getString("nome"));
                 obj.setCodigo(res.getInt("codigo"));
+                obj.setEmail(res.getString("email"));
             }
             return obj;
         } catch (SQLException ex) {
@@ -70,13 +73,14 @@ public class DisciplinaDao implements IDao<Disciplina> {
     }
 
     @Override
-    public void update(Map<String, Integer> pk, Disciplina dadosNovos) throws SQLException {
-        String sql = "UPDATE disciplina SET codigo=?, nome=? where codigo=?";
+    public void update(Map<String, Integer> pk, Estudante dadosNovos) throws SQLException {
+        String sql = "UPDATE estudante SET codigo=?, nome=?, email=? where codigo=?";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
             pstmt.setInt(1, dadosNovos.getCodigo());
             pstmt.setString(2, dadosNovos.getNome());
-            pstmt.setInt(3, pk.get("codigo"));
+            pstmt.setString(3,dadosNovos.getEmail());
+            pstmt.setInt(4, pk.get("codigo"));
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -86,7 +90,7 @@ public class DisciplinaDao implements IDao<Disciplina> {
 
     @Override
     public void delete(Map<String, Integer> pk) throws SQLException {
-        String sql = "DELETE FROM disciplina WHERE codigo=?";
+        String sql = "DELETE FROM estudante WHERE codigo=?";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(sql);
             pstmt.setInt(1, pk.get("codigo"));
@@ -98,9 +102,10 @@ public class DisciplinaDao implements IDao<Disciplina> {
     }
 
     public static void createSchema(Connection conn) throws SQLException {
-        String sql = "CREATE TABLE IF NOT EXISTS disciplina(" +
+        String sql = "CREATE TABLE IF NOT EXISTS estudante(" +
                 "  codigo integer PRIMARY KEY," +
-                "  nome text NOT NULL" +
+                "  nome text NOT NULL," +
+                "  email text NOT NULL" +
                 ");";
         try {
             Statement stmt = conn.createStatement();

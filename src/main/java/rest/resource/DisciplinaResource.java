@@ -1,6 +1,5 @@
 package rest.resource;
 
-import jdk.jshell.Snippet;
 import rest.model.Disciplina;
 import rest.model.dao.Dao;
 import rest.model.dao.DisciplinaDao;
@@ -9,8 +8,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("disciplina")
 public class DisciplinaResource {
@@ -26,11 +25,13 @@ public class DisciplinaResource {
     @Path("{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response disciplina(@PathParam("codigo") int codigo) {
-        Disciplina obj = this.dao.read(codigo);
+        Map<String, Integer> pk = new HashMap<>();
+        pk.put("codigo", codigo);
+        Disciplina obj = this.dao.read(pk);
         if (obj.getCodigo() == 0){
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok().entity(this.dao.read(codigo)).build();
+        return Response.ok().entity(this.dao.read(pk)).build();
     }
 
     @POST
@@ -45,4 +46,6 @@ public class DisciplinaResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
+
+
 }

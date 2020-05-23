@@ -6,6 +6,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 import rest.model.dao.Dao;
 import rest.model.dao.DisciplinaDao;
+import rest.model.dao.EstudanteDao;
+import rest.model.dao.NotaDao;
 
 import java.sql.SQLException;
 
@@ -13,6 +15,8 @@ public class ServiceApp {
     public static void main(String[] args) {
         try {
             DisciplinaDao.createSchema(Dao.getConnection());
+            EstudanteDao.createSchema(Dao.getConnection());
+            NotaDao.createSchema(Dao.getConnection());
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
