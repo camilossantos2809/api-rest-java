@@ -2,6 +2,7 @@ package rest.model.dao;
 
 import rest.model.Disciplina;
 import rest.model.Estudante;
+import rest.model.EstudanteNota;
 import rest.model.Nota;
 
 import java.sql.*;
@@ -98,6 +99,32 @@ public class NotaDao implements IDao<Nota> {
                 obj.setFrequencia(res.getDouble("frequencia"));
             }
             return obj;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<EstudanteNota> findByDisciplina(int disciplina) {
+        String sql = "select * from nota where disciplina_cod=?";
+        try {
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            pstmt.setInt(1, disciplina);
+
+            ResultSet res = pstmt.executeQuery();
+
+            List<EstudanteNota> list = new ArrayList<>();
+            while (res.next()) {
+                EstudanteNota obj = new EstudanteNota();
+                Estudante estudante = this.getEstudante(res.getInt("estudante_cod"));
+                obj.setCodigo(estudante.getCodigo());
+                obj.setNome(estudante.getNome());
+                obj.setEmail(estudante.getEmail());
+                obj.setNota(res.getDouble("nota"));
+                obj.setFrequencia(res.getDouble("frequencia"));
+                list.add(obj);
+            }
+            return list;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
